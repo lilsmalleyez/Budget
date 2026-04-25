@@ -284,7 +284,7 @@
         <input type="number" id="amount" placeholder="0" min="0">
       </div>
     </div>
-    <div class="form-row three">
+    <div class="form-row">
       <div>
         <label>ໝວດໝູ່</label>
         <select id="category">
@@ -302,12 +302,12 @@
       </div>
       <div>
         <label>ວັນທີ</label>
-        <input type="date" id="date">
+        <input type="date" id="date" style="min-width:0;width:100%;overflow:hidden">
       </div>
-      <div>
-        <label>ໝາຍເຫດ</label>
-        <input type="text" id="note" placeholder="(ທາງເລືອກ)">
-      </div>
+    </div>
+    <div style="margin-bottom:10px">
+      <label>ໝາຍເຫດ</label>
+      <input type="text" id="note" placeholder="(ທາງເລືອກ)" style="width:100%">
     </div>
     <div class="btn-row">
       <button class="btn-income" onclick="addTransaction('income')">+ ລາຍຮັບ</button>
