@@ -240,7 +240,10 @@
     .summary-grid { grid-template-columns: 1fr; }
     .form-row { grid-template-columns: 1fr; }
     .form-row.three { grid-template-columns: 1fr 1fr; }
+    .form-row.three > div:last-child { grid-column: 1 / -1; }
     .summary-val { font-size: 18px; }
+    body { padding: 12px; }
+    input[type="date"] { font-size: 14px !important; }
   }
 </style>
 </head>
