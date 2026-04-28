@@ -302,8 +302,7 @@
       </div>
       <div>
         <label>ວັນທີ</label>
-        <input type="text" id="date-display" placeholder="DD/MM/YYYY" readonly onclick="document.getElementById('date').showPicker()" style="cursor:pointer;background:#fafaf8">
-        <input type="date" id="date" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0" onchange="updateDateDisplay()">
+        <input type="date" id="date" style="width:100%;min-width:0;-webkit-appearance:none;appearance:none;padding:8px 6px;font-size:13px">
       </div>
     </div>
     <div style="margin-bottom:10px">
@@ -342,17 +341,8 @@
   let filter = 'all';
 
   document.getElementById('date').valueAsDate = new Date();
-  updateDateDisplay();
   const now = new Date();
   document.getElementById('month-label').textContent = months[now.getMonth()] + ' ' + now.getFullYear();
-
-  function updateDateDisplay() {
-    const d = document.getElementById('date').value;
-    if (d) {
-      const parts = d.split('-');
-      document.getElementById('date-display').value = parts[2]+'/'+parts[1]+'/'+parts[0];
-    }
-  }
 
   function fmt(n) { return '₭' + Math.round(n).toLocaleString(); }
 
