@@ -501,6 +501,48 @@
     render();
   }
 
+  function editTransaction(id) {
+    const t = txs.find(x => x.id === id);
+    if (!t) return;
+    document.getElementById('edit-id').value = id;
+    document.getElementById('edit-type').value = t.type;
+    document.getElementById('edit-desc').value = t.desc;
+    document.getElementById('edit-amount').value = t.amount;
+    document.getElementById('edit-category').value = t.category;
+    document.getElementById('edit-date').value = t.date;
+    document.getElementById('edit-note').value = t.note || '';
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+
+  function saveEdit() {
+    const id = parseInt(document.getElementById('edit-id').value);
+    const desc = document.getElementById('edit-desc').value.trim();
+    const amount = parseFloat(document.getElementById('edit-amount').value);
+    if (!desc || !amount || amount <= 0) return;
+    const idx = txs.findIndex(x => x.id === id);
+    if (idx === -1) return;
+    txs[idx] = {
+      id,
+      type: document.getElementById('edit-type').value,
+      desc,
+      amount,
+      category: document.getElementById('edit-category').value,
+      date: document.getElementById('edit-date').value,
+      note: document.getElementById('edit-note').value.trim()
+    };
+    save();
+    closeModal();
+    render();
+  }
+
+  document.getElementById('modal-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
   function render() {
     const income = txs.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
     const expense = txs.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
