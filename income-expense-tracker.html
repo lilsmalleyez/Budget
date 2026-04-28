@@ -207,6 +207,75 @@
   }
   .tx-amount.income { color: #16a34a; }
   .tx-amount.expense { color: #dc2626; }
+  .tx-edit {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #aaa;
+    font-size: 14px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    transition: color 0.2s;
+  }
+  .tx-edit:hover { color: #6366f1; }
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px 20px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  }
+  .modal-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 16px;
+  }
+  .modal-field { margin-bottom: 12px; }
+  .modal-field label { font-size: 12px; color: #666; display: block; margin-bottom: 5px; }
+  .modal-field input, .modal-field select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: "Noto Sans Lao", sans-serif;
+    font-size: 16px;
+    color: #1a1a1a;
+    background: #fafaf8;
+  }
+  .modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+  .modal-cancel {
+    background: #f5f5f0;
+    color: #555;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    font-family: "Noto Sans Lao", sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .modal-save {
+    background: #1a1a1a;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-family: "Noto Sans Lao", sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+  }
   .tx-del {
     background: none;
     border: none;
@@ -329,6 +398,56 @@
   </div>
 </div>
 
+<!-- Edit Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-title">✏️ ແກ້ໄຂລາຍການ</div>
+    <input type="hidden" id="edit-id">
+    <div class="modal-field">
+      <label>ປະເພດ</label>
+      <select id="edit-type">
+        <option value="income">ລາຍຮັບ</option>
+        <option value="expense">ລາຍຈ່າຍ</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>ລາຍລະອຽດ</label>
+      <input type="text" id="edit-desc">
+    </div>
+    <div class="modal-field">
+      <label>ຈຳນວນເງິນ (₭)</label>
+      <input type="number" id="edit-amount" min="0">
+    </div>
+    <div class="modal-field">
+      <label>ໝວດໝູ່</label>
+      <select id="edit-category">
+        <option value="ເງິນເດືອນ">ເງິນເດືອນ</option>
+        <option value="ທຸລະກິດ">ທຸລະກິດ</option>
+        <option value="ບັດດອງ">ບັດດອງ</option>
+        <option value="ອາຫານ">ອາຫານ</option>
+        <option value="ການຂົນສົ່ງ">ການຂົນສົ່ງ</option>
+        <option value="ສຸຂະພາບ">ສຸຂະພາບ</option>
+        <option value="ການສຶກສາ">ການສຶກສາ</option>
+        <option value="ຄ່ານ້ຳ-ໄຟ">ຄ່ານ້ຳ-ໄຟ</option>
+        <option value="ບັນເທີງ">ບັນເທີງ</option>
+        <option value="ອື່ນໆ">ອື່ນໆ</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>ວັນທີ</label>
+      <input type="date" id="edit-date">
+    </div>
+    <div class="modal-field">
+      <label>ໝາຍເຫດ</label>
+      <input type="text" id="edit-note" placeholder="(ທາງເລືອກ)">
+    </div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal()">ຍົກເລີກ</button>
+      <button class="modal-save" onclick="saveEdit()">ບັນທຶກ</button>
+    </div>
+  </div>
+</div>
+
 <script>
   const catIcons = {
     'ເງິນເດືອນ':'💼','ທຸລະກິດ':'📊','ບັດດອງ':'🎴','ອາຫານ':'🍜',
@@ -411,7 +530,7 @@
           <div class="tx-meta">${t.category}${t.note ? ' · ' + t.note : ''}${d ? ' · ' + d : ''}</div>
         </div>
         <div class="tx-amount ${t.type}">${t.type === 'income' ? '+' : '−'}${fmt(t.amount)}</div>
-        <button class="tx-del" onclick="deleteTransaction(${t.id})">✕</button>
+        <button class="tx-edit" onclick="editTransaction(${t.id})">✏️</button><button class="tx-del" onclick="deleteTransaction(${t.id})">✕</button>
       </div>`;
     }).join('');
   }
